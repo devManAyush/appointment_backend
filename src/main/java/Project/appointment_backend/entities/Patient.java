@@ -6,11 +6,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name="patient")
+@Table(name="Patient")
 @Getter @Setter
 
 
-public class patient {
+public class Patient {
     @Id
     @GeneratedValue(strategy =
     GenerationType.IDENTITY)

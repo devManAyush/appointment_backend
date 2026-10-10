@@ -3,14 +3,15 @@ package Project.appointment_backend.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="patient")
+@Table(name="Appointment")
 @Getter
 @Setter
 
-public class queueEntry {
+public class Appointment {
     @Id
     @GeneratedValue(strategy =
             GenerationType.IDENTITY)
@@ -19,7 +20,10 @@ public class queueEntry {
     private String patient_name;
     private String  doctor_id;
     private String doctor_name;
-    private LocalDateTime joinedAt;
-    private String tokenNumber;
+    private LocalDateTime appointment_dateTime;
     private String status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="doctor_id")
+    private Doctor doctor;
 }

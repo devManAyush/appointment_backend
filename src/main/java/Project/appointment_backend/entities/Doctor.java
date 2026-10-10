@@ -5,11 +5,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name="patient")
+@Table(name="Doctor")
 @Getter
 @Setter
 
-public class doctor {
+public class Doctor {
     @Id
     @GeneratedValue(strategy =
             GenerationType.IDENTITY)
@@ -17,4 +17,10 @@ public class doctor {
     private String doctorName;
     private String specialty;
     private String availability;
+    private int salary;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="appointment_id")
+    private Appointment appointment;
 }
