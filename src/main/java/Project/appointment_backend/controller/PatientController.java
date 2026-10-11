@@ -7,10 +7,9 @@ import Project.appointment_backend.service.PatientService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -21,5 +20,26 @@ public class PatientController {
     @PostMapping
     public ResponseEntity<PatientDto> addPatient(@RequestBody CreatePatientDto createPatientDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(patientService.addPatient(createPatientDto));
+    }
+    @GetMapping
+    public ResponseEntity<List<PatientDto>> getAllPatients() {
+        return ResponseEntity.status(HttpStatus.OK).body(patientService.getAllPatients());
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<PatientDto> getPatientById(@PathVariable int id) {
+        return ResponseEntity.status(HttpStatus.OK).body(patientService.getPatientById(id));
+    }
+    @DeleteMapping("patient/{id}")
+    public ResponseEntity <Void> deleteUserById(@PathVariable int id){
+            patientService.deleteUserById(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+    @PatchMapping("/{id}")
+    public ResponseEntity<PatientDto> patchPatient(@PathVariable int id, @RequestBody CreatePatientDto patchPatientDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(patientService.patchPatient(id,patchPatientDto));
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<PatientDto> updatePatient(@PathVariable int id, @RequestBody CreatePatientDto updatePatientDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(patientService.updatePatient(id,updatePatientDto));
     }
 }

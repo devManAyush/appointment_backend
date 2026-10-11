@@ -10,7 +10,7 @@ import lombok.Setter;
 
 public class DoctorDto {
     private int id;
-    private String doctorName;
+    private String name;
     private String specialty;
     private String availability;
     private int salary;

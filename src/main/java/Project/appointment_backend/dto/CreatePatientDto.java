@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 
 public class CreatePatientDto {
-    private String Name;
-    private String Email;
-    private String Phone;
+    private String name;
+    private String email;
+    private String phone;
 }
