@@ -57,14 +57,15 @@ public class PatientService {
         if(patchPatientDto.getPhone()!=null){
             patient.setPhone(patchPatientDto.getPhone());
         }
-        return new PatientDto(patient.getId(), patient.getEmail(), patient.getName(), patient.getPhone());
+        return new PatientDto(patient.getId(), patient.getName(), patient.getEmail(), patient.getPhone());
     }
 
+    @Transactional
     public PatientDto updatePatient(int id, CreatePatientDto updatePatientDto) {
         Patient patient = patientRepository.findById(id).orElseThrow();
         patient .setName(updatePatientDto.getName());
         patient.setEmail(updatePatientDto.getEmail());
         patient.setPhone(updatePatientDto.getPhone());
-        return new PatientDto(patient.getId(), patient.getEmail(), patient.getName(), patient.getPhone());
+        return new PatientDto(patient.getId(), patient.getName(),patient.getEmail(), patient.getPhone());
     }
 }
