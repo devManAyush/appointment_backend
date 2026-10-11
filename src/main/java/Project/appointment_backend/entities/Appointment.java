@@ -16,7 +16,6 @@ public class Appointment {
     @GeneratedValue(strategy =
             GenerationType.IDENTITY)
     private int id;
-    private String patient_id;
     private String patient_name;
     private String  doctor_id;
     private String doctor_name;
