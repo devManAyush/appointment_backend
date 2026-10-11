@@ -14,13 +14,15 @@ public class Doctor {
     @GeneratedValue(strategy =
             GenerationType.IDENTITY)
     private int id;
-    private String doctorName;
+    private String Name;
     private String specialty;
     private String availability;
     private int salary;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="appointment_id")
-    private Appointment appointment;
+
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name="appointment_id")
+//    private Appointment appointment;
 }

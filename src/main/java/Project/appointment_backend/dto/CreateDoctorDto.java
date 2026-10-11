@@ -7,6 +7,8 @@ import lombok.Setter;
 @Setter
 
 public class CreateDoctorDto {
-    private String doctorName;
-    private String specialty;
+    private String Name;
+    private int salary;
+    private String availability;
+    private String speciality;
 }

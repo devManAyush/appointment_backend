@@ -15,9 +15,9 @@ public class QueueEntry {
     @GeneratedValue(strategy =
             GenerationType.IDENTITY)
     private int id;
-    private String patient_id;
+    private int patient_id;
     private String patient_name;
-    private String  doctor_id;
+    private int  doctor_id;
     private String doctor_name;
     private LocalDateTime joinedAt;
     private String tokenNumber;
