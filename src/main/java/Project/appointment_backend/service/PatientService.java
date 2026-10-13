@@ -17,15 +17,6 @@ import java.util.List;
 public class PatientService {
     private final PatientRepository patientRepository;
 
-    public PatientDto addPatient(CreatePatientDto createPatientDto) {
-        Patient patient = new Patient();
-        patient.setName(createPatientDto.getName());
-        patient.setEmail(createPatientDto.getEmail());
-        patient.setPhone(createPatientDto.getPhone());
-        Patient addedPatient=patientRepository.save(patient);
-        return new PatientDto(addedPatient.getId(), addedPatient.getName(),addedPatient.getEmail(),addedPatient.getPhone());
-    }
-
     public List<PatientDto> getAllPatients() {
         List<Patient> patients = patientRepository.findAll();
         List<PatientDto> patientDtoList = new ArrayList<>();

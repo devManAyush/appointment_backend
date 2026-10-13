@@ -65,7 +65,7 @@ public class DoctorService {
         if(patchDoctorDto.getSpeciality()!=null){
             doctor.setSpecialty(patchDoctorDto.getSpeciality());
         }
-        return new DoctorDto(doctor.getId(), doctor.getName(), doctor.getAvailability(), doctor.getSpecialty(), doctor.getSalary());
+        return new DoctorDto(doctor.getId(), doctor.getName(), doctor.getSpecialty(), doctor.getAvailability(), doctor.getSalary());
     }
 
     @Transactional

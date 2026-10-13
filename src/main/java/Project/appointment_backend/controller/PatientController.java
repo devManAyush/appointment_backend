@@ -2,7 +2,7 @@ package Project.appointment_backend.controller;
 
 import Project.appointment_backend.dto.CreatePatientDto;
 import Project.appointment_backend.dto.PatientDto;
-import Project.appointment_backend.entities.Patient;
+
 import Project.appointment_backend.service.PatientService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,10 +17,7 @@ import java.util.List;
 
 public class PatientController {
     private final PatientService patientService;
-    @PostMapping
-    public ResponseEntity<PatientDto> addPatient(@RequestBody CreatePatientDto createPatientDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(patientService.addPatient(createPatientDto));
-    }
+
     @GetMapping
     public ResponseEntity<List<PatientDto>> getAllPatients() {
         return ResponseEntity.status(HttpStatus.OK).body(patientService.getAllPatients());
