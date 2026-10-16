@@ -31,7 +31,7 @@ public class DoctorController {
     public ResponseEntity<DoctorDto> getDoctorById(@PathVariable int id) {
         return ResponseEntity.status(HttpStatus.OK).body(doctorService.getDoctorById(id));
     }
-    @DeleteMapping("doctor/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity <Void> deleteUserById(@PathVariable int id){
         doctorService.deleteDoctorById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

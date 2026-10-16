@@ -26,7 +26,7 @@ public class PatientController {
     public ResponseEntity<PatientDto> getPatientById(@PathVariable int id) {
         return ResponseEntity.status(HttpStatus.OK).body(patientService.getPatientById(id));
     }
-    @DeleteMapping("patient/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity <Void> deleteUserById(@PathVariable int id){
             patientService.deleteUserById(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

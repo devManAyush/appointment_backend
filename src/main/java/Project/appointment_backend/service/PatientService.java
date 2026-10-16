@@ -21,7 +21,7 @@ public class PatientService {
         List<Patient> patients = patientRepository.findAll();
         List<PatientDto> patientDtoList = new ArrayList<>();
         for(Patient patient:patients){
-            PatientDto patientDto=new PatientDto(patient.getId(), patient.getEmail(), patient.getName(), patient.getPhone());
+            PatientDto patientDto=new PatientDto(patient.getId(), patient.getName(),patient.getEmail(), patient.getPhone());
             patientDtoList.add(patientDto);
         }
         return patientDtoList;
@@ -29,7 +29,7 @@ public class PatientService {
 
     public PatientDto getPatientById(int id) {
         Patient patient = patientRepository.findById(id).orElseThrow();
-        return new PatientDto(patient.getId(), patient.getEmail(), patient.getName(), patient.getPhone());
+        return new PatientDto(patient.getId(), patient.getName(), patient.getEmail(), patient.getPhone());
     }
 
     public void deleteUserById(int id) {
