@@ -16,7 +16,7 @@ public class Appointment {
     @GeneratedValue(strategy =
             GenerationType.IDENTITY)
     private int id;
-    private LocalDateTime appointment_dateTime;
+    private LocalDateTime appointmentDateTime;
     private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -24,6 +24,6 @@ public class Appointment {
     private Doctor doctor;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="patient_id",nullable = false)
+    @JoinColumn(name="patient_id")
     private Patient patient;
 }

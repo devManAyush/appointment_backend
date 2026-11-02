@@ -3,6 +3,7 @@ package Project.appointment_backend.service;
 import Project.appointment_backend.dto.CreateDoctorDto;
 import Project.appointment_backend.dto.DoctorDto;
 import Project.appointment_backend.entities.Doctor;
+import Project.appointment_backend.entities.SlotStatus;
 import Project.appointment_backend.repository.DoctorRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -33,7 +34,7 @@ public class DoctorService {
         return new DoctorDto(addedDoctor.getId(), addedDoctor.getName(),addedDoctor.getSpecialty(),addedDoctor.getAvailability(),addedDoctor.getSalary());
     }
 
-    public List<DoctorDto> getAllPatients() {
+    public List<DoctorDto> getAllDoctors() {
         List<Doctor> doctors = doctorRepository.findAll();
         List<DoctorDto> DoctorDtoList = new ArrayList<>();
         for(Doctor doctor:doctors){
@@ -71,10 +72,36 @@ public class DoctorService {
     @Transactional
     public DoctorDto updateDoctor(int id, CreateDoctorDto updateDoctorDto) {
         Doctor doctor = doctorRepository.findById(id).orElseThrow();
-        doctor .setName(updateDoctorDto.getName());
+        doctor.setName(updateDoctorDto.getName());
         doctor.setSpecialty(updateDoctorDto.getSpeciality());
         doctor.setSalary(updateDoctorDto.getSalary());
         return new DoctorDto(doctor.getId(), doctor.getName(),doctor.getSpecialty(), doctor.getAvailability(), doctor.getSalary());
     }
+
+
+    @Transactional
+    public Doctor createDoctor(CreateDoctorDto dto) {
+
+        Doctor doctor = new Doctor();
+        doctor.setName(dto.getName());
+        doctor.setMail(dto.getMail());
+        doctor.setPhone(dto.getPhone());
+        doctor.setSpecialty(dto.getSpecialty());
+        doctor.setVisitingFees(dto.getVisitingFees());
+        doctor.setSalary(dto.getSalary());
+        List<Slot> slots = new ArrayList<>();
+        if (dto.getSlots() != null) {
+            for (CreateSlotDto slotDto : dto.getSlots()) {
+                Slot slot = new Slot();
+                slot.setStartTime(slotDto.getStartTime());
+                slot.setEndTime(slotDto.getEndTime());
+                slot.setStatus(SlotStatus.AVAILABLE);
+                slot.setDoctor(doctor);
+            }
+        }
+        doctor.setSlots(slots);
+        return doctorRepository.save(doctor);
+    }
+
 }
 

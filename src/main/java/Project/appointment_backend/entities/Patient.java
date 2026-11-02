@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Entity
 @Table(name="Patient")
 @Getter @Setter
@@ -16,6 +19,11 @@ public class Patient {
     GenerationType.IDENTITY)
     private int id;
     private String name;
-    private String email;
+    private String mail;
     private String phone;
+    private int age;
+    private String gender;
+    private String disease;
+    @OneToMany(mappedBy = "patient")
+    private List<Appointment> appointments;
 }
