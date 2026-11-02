@@ -25,7 +25,7 @@ public class DoctorController {
     }
     @GetMapping
     public ResponseEntity<List<DoctorDto>> getAllDoctors() {
-        return ResponseEntity.status(HttpStatus.OK).body(doctorService.getAllPatients());
+        return ResponseEntity.status(HttpStatus.OK).body(doctorService.getAllDoctors());
     }
     @GetMapping("/{id}")
     public ResponseEntity<DoctorDto> getDoctorById(@PathVariable int id) {

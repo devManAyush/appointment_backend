@@ -25,5 +25,4 @@ public class Slot {
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
 
-
 }

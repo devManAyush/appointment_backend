@@ -1,8 +1,10 @@
 package Project.appointment_backend.service;
 
 import Project.appointment_backend.dto.CreateDoctorDto;
+import Project.appointment_backend.dto.CreateSlotDto;
 import Project.appointment_backend.dto.DoctorDto;
 import Project.appointment_backend.entities.Doctor;
+import Project.appointment_backend.entities.Slot;
 import Project.appointment_backend.entities.SlotStatus;
 import Project.appointment_backend.repository.DoctorRepository;
 import jakarta.transaction.Transactional;
@@ -20,87 +22,173 @@ import java.util.List;
 @AllArgsConstructor
 public class DoctorService {
     private final DoctorRepository doctorRepository;
+
+    @Transactional
     public DoctorDto addDoctor(CreateDoctorDto createDoctorDto) {
         Doctor doctor = new Doctor();
         doctor.setName(createDoctorDto.getName());
-        doctor.setSpecialty(createDoctorDto.getSpeciality());
-        if (createDoctorDto.getAvailability() != null && !createDoctorDto.getAvailability().isBlank()) {
-            doctor.setAvailability(createDoctorDto.getAvailability());
-        } else {
-            doctor.setAvailability("AVAILABLE");
-        }
+        doctor.setMail(createDoctorDto.getMail());
+        doctor.setPhone(createDoctorDto.getPhone());
+        doctor.setSpecialty(createDoctorDto.getSpecialty());
+        doctor.setVisitingFees(createDoctorDto.getVisitingFees());
         doctor.setSalary(createDoctorDto.getSalary());
-        Doctor addedDoctor=doctorRepository.save(doctor);
-        return new DoctorDto(addedDoctor.getId(), addedDoctor.getName(),addedDoctor.getSpecialty(),addedDoctor.getAvailability(),addedDoctor.getSalary());
-    }
-
-    public List<DoctorDto> getAllDoctors() {
-        List<Doctor> doctors = doctorRepository.findAll();
-        List<DoctorDto> DoctorDtoList = new ArrayList<>();
-        for(Doctor doctor:doctors){
-            DoctorDto DoctorDto=new DoctorDto(doctor.getId(), doctor.getSpecialty(), doctor
-                    .getName(), doctor.getAvailability(), doctor.getSalary());
-            DoctorDtoList.add(DoctorDto);
-        }
-        return DoctorDtoList;
-    }
-
-    public DoctorDto getDoctorById(int id) {
-        Doctor doctor = doctorRepository.findById(id).orElseThrow();
-        return new DoctorDto(doctor.getId(), doctor.getAvailability(), doctor.getName(), doctor.getSpecialty(), doctor.getSalary());
-    }
-
-    public void deleteDoctorById(int id) {
-        doctorRepository.deleteById(id);
-    }
-
-    @Transactional
-    public DoctorDto patchDoctor(int id, CreateDoctorDto patchDoctorDto) {
-        Doctor doctor = doctorRepository.findById(id).orElseThrow();
-        if(patchDoctorDto.getName()!=null){
-            doctor.setName(patchDoctorDto.getName());
-        }
-        if(patchDoctorDto.getAvailability()!=null){
-            doctor.setAvailability(patchDoctorDto.getAvailability());
-        }
-        if(patchDoctorDto.getSpeciality()!=null){
-            doctor.setSpecialty(patchDoctorDto.getSpeciality());
-        }
-        return new DoctorDto(doctor.getId(), doctor.getName(), doctor.getSpecialty(), doctor.getAvailability(), doctor.getSalary());
-    }
-
-    @Transactional
-    public DoctorDto updateDoctor(int id, CreateDoctorDto updateDoctorDto) {
-        Doctor doctor = doctorRepository.findById(id).orElseThrow();
-        doctor.setName(updateDoctorDto.getName());
-        doctor.setSpecialty(updateDoctorDto.getSpeciality());
-        doctor.setSalary(updateDoctorDto.getSalary());
-        return new DoctorDto(doctor.getId(), doctor.getName(),doctor.getSpecialty(), doctor.getAvailability(), doctor.getSalary());
-    }
-
-
-    @Transactional
-    public Doctor createDoctor(CreateDoctorDto dto) {
-
-        Doctor doctor = new Doctor();
-        doctor.setName(dto.getName());
-        doctor.setMail(dto.getMail());
-        doctor.setPhone(dto.getPhone());
-        doctor.setSpecialty(dto.getSpecialty());
-        doctor.setVisitingFees(dto.getVisitingFees());
-        doctor.setSalary(dto.getSalary());
         List<Slot> slots = new ArrayList<>();
-        if (dto.getSlots() != null) {
-            for (CreateSlotDto slotDto : dto.getSlots()) {
+        if (createDoctorDto.getSlots() != null) {
+            for (CreateSlotDto slotDto : createDoctorDto.getSlots()) {
                 Slot slot = new Slot();
                 slot.setStartTime(slotDto.getStartTime());
                 slot.setEndTime(slotDto.getEndTime());
                 slot.setStatus(SlotStatus.AVAILABLE);
                 slot.setDoctor(doctor);
+                slots.add(slot);
             }
         }
         doctor.setSlots(slots);
-        return doctorRepository.save(doctor);
+        Doctor addedDoctor=doctorRepository.save(doctor);
+        List<CreateSlotDto> slotDtos = new ArrayList<>();
+        for (Slot slot : addedDoctor.getSlots()) {
+            CreateSlotDto slotDto = new CreateSlotDto();
+            slotDto.setStartTime(slot.getStartTime());
+            slotDto.setEndTime(slot.getEndTime());
+            slotDtos.add(slotDto);
+        }
+
+        return new DoctorDto(
+                addedDoctor.getId(),
+                addedDoctor.getName(),
+                addedDoctor.getMail(),
+                addedDoctor.getPhone(),
+                addedDoctor.getSpecialty(),
+                addedDoctor.getVisitingFees(),
+                addedDoctor.getSalary(),
+                slotDtos
+        );
+    }
+
+
+    public List<DoctorDto> getAllDoctors() {
+        List<Doctor> doctors = doctorRepository.findAll();
+        List<DoctorDto> doctorDtos = new ArrayList<>();
+        for (Doctor doctor : doctors) {
+            List<CreateSlotDto> slotDtos = new ArrayList<>();
+            if (doctor.getSlots() != null) {
+                for (Slot slot : doctor.getSlots()) {
+                    CreateSlotDto slotDto = new CreateSlotDto();
+                    slotDto.setStartTime(slot.getStartTime());
+                    slotDto.setEndTime(slot.getEndTime());
+                    slotDtos.add(slotDto);
+                }
+            }
+            doctorDtos.add(new DoctorDto(
+                    doctor.getId(),
+                    doctor.getName(),
+                    doctor.getMail(),
+                    doctor.getPhone(),
+                    doctor.getSpecialty(),
+                    doctor.getVisitingFees(),
+                    doctor.getSalary(),
+                    slotDtos
+            ));
+        }
+
+        return doctorDtos;
+    }
+
+
+    public DoctorDto getDoctorById(int id) {
+        Doctor doctor = doctorRepository.findById(id).orElseThrow();
+        List<CreateSlotDto> slotDtos = new ArrayList<>();
+        if (doctor.getSlots() != null) {
+            for (Slot slot : doctor.getSlots()) {
+                CreateSlotDto slotDto = new CreateSlotDto();
+                slotDto.setStartTime(slot.getStartTime());
+                slotDto.setEndTime(slot.getEndTime());
+                slotDtos.add(slotDto);
+            }
+        }
+        return new DoctorDto(
+                doctor.getId(),
+                doctor.getName(),
+                doctor.getMail(),
+                doctor.getPhone(),
+                doctor.getSpecialty(),
+                doctor.getVisitingFees(),
+                doctor.getSalary(),
+                slotDtos
+        );
+    }
+
+
+    public void deleteDoctorById(int id) {
+        doctorRepository.deleteById(id);
+    }
+
+
+    @Transactional
+    public DoctorDto patchDoctor(int id, CreateDoctorDto patchDoctorDto) {
+        Doctor doctor = doctorRepository.findById(id).orElseThrow();
+        if (patchDoctorDto.getSlots() != null) {
+            List<Slot> slots = new ArrayList<>();
+            for (CreateSlotDto slotDto : patchDoctorDto.getSlots()) {
+                Slot slot = new Slot();
+                slot.setStartTime(slotDto.getStartTime());
+                slot.setEndTime(slotDto.getEndTime());
+                slot.setStatus(SlotStatus.AVAILABLE);
+                slot.setDoctor(doctor);
+                slots.add(slot);
+            }
+            doctor.setSlots(slots);
+        }
+        return toDoctorDto(doctor);
+    }
+
+
+    @Transactional
+    public DoctorDto updateDoctor(int id, CreateDoctorDto updateDoctorDto) {
+        Doctor doctor = doctorRepository.findById(id).orElseThrow();
+        doctor.setName(updateDoctorDto.getName());
+        doctor.setMail(updateDoctorDto.getMail());
+        doctor.setPhone(updateDoctorDto.getPhone());
+        doctor.setSpecialty(updateDoctorDto.getSpecialty());
+        doctor.setVisitingFees(updateDoctorDto.getVisitingFees());
+        doctor.setSalary(updateDoctorDto.getSalary());
+        List<Slot> slots = new ArrayList<>();
+        if (updateDoctorDto.getSlots() != null) {
+            for (CreateSlotDto slotDto : updateDoctorDto.getSlots()) {
+                Slot slot = new Slot();
+                slot.setStartTime(slotDto.getStartTime());
+                slot.setEndTime(slotDto.getEndTime());
+                slot.setStatus(SlotStatus.AVAILABLE);
+                slot.setDoctor(doctor);
+                slots.add(slot);
+            }
+            doctor.setSlots(slots);
+        }
+        return toDoctorDto(doctor);
+    }
+
+
+    private DoctorDto toDoctorDto(Doctor doctor) {
+        List<CreateSlotDto> slotDtos = new ArrayList<>();
+
+        if (doctor.getSlots() != null) {
+            for (Slot slot : doctor.getSlots()) {
+                CreateSlotDto slotDto = new CreateSlotDto();
+                slotDto.setStartTime(slot.getStartTime());
+                slotDto.setEndTime(slot.getEndTime());
+                slotDtos.add(slotDto);
+            }
+        }
+        return new DoctorDto(
+                doctor.getId(),
+                doctor.getName(),
+                doctor.getMail(),
+                doctor.getPhone(),
+                doctor.getSpecialty(),
+                doctor.getVisitingFees(),
+                doctor.getSalary(),
+                slotDtos
+        );
     }
 
 }
