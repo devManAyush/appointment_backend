@@ -21,15 +21,14 @@ public class PatientService {
         List<Patient> patients = patientRepository.findAll();
         List<PatientDto> patientDtoList = new ArrayList<>();
         for(Patient patient:patients){
-            PatientDto patientDto=new PatientDto(patient.getId(), patient.getName(),patient.getEmail(), patient.getPhone());
-            patientDtoList.add(patientDto);
+            patientDtoList.add(toPatientDto(patient));
         }
         return patientDtoList;
     }
 
     public PatientDto getPatientById(int id) {
         Patient patient = patientRepository.findById(id).orElseThrow();
-        return new PatientDto(patient.getId(), patient.getName(), patient.getEmail(), patient.getPhone());
+        return  toPatientDto(patient);
     }
 
     public void deleteUserById(int id) {
@@ -42,21 +41,57 @@ public class PatientService {
         if(patchPatientDto.getName()!=null){
             patient.setName(patchPatientDto.getName());
         }
-        if(patchPatientDto.getEmail()!=null){
-            patient.setEmail(patchPatientDto.getEmail());
+        if(patchPatientDto.getMail()!=null){
+            patient.setMail(patchPatientDto.getMail());
         }
         if(patchPatientDto.getPhone()!=null){
             patient.setPhone(patchPatientDto.getPhone());
         }
-        return new PatientDto(patient.getId(), patient.getName(), patient.getEmail(), patient.getPhone());
+        if(patchPatientDto.getAge()!=null) {
+            patient.setAge(patchPatientDto.getAge());
+        }
+        if(patchPatientDto.getGender()!=null) {
+            patient.setGender(patchPatientDto.getGender());
+        }
+        if(patchPatientDto.getDisease()!=null) {
+            patient.setDisease(patchPatientDto.getDisease());
+        }
+        return toPatientDto(patient);
     }
 
     @Transactional
     public PatientDto updatePatient(int id, CreatePatientDto updatePatientDto) {
         Patient patient = patientRepository.findById(id).orElseThrow();
         patient .setName(updatePatientDto.getName());
-        patient.setEmail(updatePatientDto.getEmail());
+        patient.setMail(updatePatientDto.getMail());
         patient.setPhone(updatePatientDto.getPhone());
-        return new PatientDto(patient.getId(), patient.getName(),patient.getEmail(), patient.getPhone());
+        patient.setAge(updatePatientDto.getAge());
+        patient.setGender(updatePatientDto.getGender());
+        patient.setDisease(updatePatientDto.getDisease());
+        return toPatientDto(patient);
+    }
+
+    public PatientDto addPatient(CreatePatientDto createPatientDto) {
+        Patient patient = new Patient();
+        patient.setName(createPatientDto.getName());
+        patient.setMail(createPatientDto.getMail());
+        patient.setPhone(createPatientDto.getPhone());
+        patient.setAge(createPatientDto.getAge());
+        patient.setGender(createPatientDto.getGender());
+        patient.setDisease(createPatientDto.getDisease());
+        Patient savedPatient = patientRepository.save(patient);
+        return toPatientDto(savedPatient);
+    }
+
+    private PatientDto toPatientDto(Patient patient) {
+        return new PatientDto(
+                patient.getId(),
+                patient.getName(),
+                patient.getMail(),
+                patient.getPhone(),
+                patient.getAge(),
+                patient.getGender(),
+                patient.getDisease()
+        );
     }
 }

@@ -30,7 +30,7 @@ public class AppointmentService {
 
         Patient newPatient = new Patient();
         newPatient.setName(dto.getPatientName());
-        newPatient.setEmail(dto.getPatientEmail());
+        newPatient.setMail(dto.getPatientEmail());
         newPatient.setPhone(dto.getPatientPhone());
         Patient savedPatient = patientRepository.save(newPatient);
 

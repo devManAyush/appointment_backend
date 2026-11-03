@@ -18,6 +18,11 @@ import java.util.List;
 public class PatientController {
     private final PatientService patientService;
 
+    @PostMapping
+    public ResponseEntity<PatientDto> addPatient(@RequestBody CreatePatientDto createPatientDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(patientService.addPatient(createPatientDto));
+    }
+
     @GetMapping
     public ResponseEntity<List<PatientDto>> getAllPatients() {
         return ResponseEntity.status(HttpStatus.OK).body(patientService.getAllPatients());

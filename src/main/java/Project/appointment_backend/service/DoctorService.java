@@ -45,24 +45,7 @@ public class DoctorService {
         }
         doctor.setSlots(slots);
         Doctor addedDoctor=doctorRepository.save(doctor);
-        List<CreateSlotDto> slotDtos = new ArrayList<>();
-        for (Slot slot : addedDoctor.getSlots()) {
-            CreateSlotDto slotDto = new CreateSlotDto();
-            slotDto.setStartTime(slot.getStartTime());
-            slotDto.setEndTime(slot.getEndTime());
-            slotDtos.add(slotDto);
-        }
-
-        return new DoctorDto(
-                addedDoctor.getId(),
-                addedDoctor.getName(),
-                addedDoctor.getMail(),
-                addedDoctor.getPhone(),
-                addedDoctor.getSpecialty(),
-                addedDoctor.getVisitingFees(),
-                addedDoctor.getSalary(),
-                slotDtos
-        );
+        return toDoctorDto(addedDoctor);
     }
 
 
@@ -70,52 +53,15 @@ public class DoctorService {
         List<Doctor> doctors = doctorRepository.findAll();
         List<DoctorDto> doctorDtos = new ArrayList<>();
         for (Doctor doctor : doctors) {
-            List<CreateSlotDto> slotDtos = new ArrayList<>();
-            if (doctor.getSlots() != null) {
-                for (Slot slot : doctor.getSlots()) {
-                    CreateSlotDto slotDto = new CreateSlotDto();
-                    slotDto.setStartTime(slot.getStartTime());
-                    slotDto.setEndTime(slot.getEndTime());
-                    slotDtos.add(slotDto);
-                }
-            }
-            doctorDtos.add(new DoctorDto(
-                    doctor.getId(),
-                    doctor.getName(),
-                    doctor.getMail(),
-                    doctor.getPhone(),
-                    doctor.getSpecialty(),
-                    doctor.getVisitingFees(),
-                    doctor.getSalary(),
-                    slotDtos
-            ));
+            doctorDtos.add(toDoctorDto(doctor));
         }
-
         return doctorDtos;
     }
 
 
     public DoctorDto getDoctorById(int id) {
         Doctor doctor = doctorRepository.findById(id).orElseThrow();
-        List<CreateSlotDto> slotDtos = new ArrayList<>();
-        if (doctor.getSlots() != null) {
-            for (Slot slot : doctor.getSlots()) {
-                CreateSlotDto slotDto = new CreateSlotDto();
-                slotDto.setStartTime(slot.getStartTime());
-                slotDto.setEndTime(slot.getEndTime());
-                slotDtos.add(slotDto);
-            }
-        }
-        return new DoctorDto(
-                doctor.getId(),
-                doctor.getName(),
-                doctor.getMail(),
-                doctor.getPhone(),
-                doctor.getSpecialty(),
-                doctor.getVisitingFees(),
-                doctor.getSalary(),
-                slotDtos
-        );
+        return toDoctorDto(doctor);
     }
 
 

@@ -10,11 +10,8 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 public class AppointmentDto {
-    private int appointmentId;
-    private LocalDateTime appointmentDate;
-    private String status;
-    private int patientId;
-    private String patientName;
-    private int doctorId;
+    private int id;
     private String doctorName;
+    private String patientName;
+    private CreateSlotDto slot;
 }
