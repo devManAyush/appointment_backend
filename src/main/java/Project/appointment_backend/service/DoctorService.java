@@ -122,6 +122,7 @@ public class DoctorService {
                 CreateSlotDto slotDto = new CreateSlotDto();
                 slotDto.setStartTime(slot.getStartTime());
                 slotDto.setEndTime(slot.getEndTime());
+                slotDto.setStatus(slot.getStatus());
                 slotDtos.add(slotDto);
             }
         }

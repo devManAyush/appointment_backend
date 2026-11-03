@@ -16,14 +16,16 @@ public class Appointment {
     @GeneratedValue(strategy =
             GenerationType.IDENTITY)
     private int id;
-    private LocalDateTime appointmentDateTime;
-    private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="doctor_id",nullable = false)
     private Doctor doctor;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="patient_id")
+    @JoinColumn(name="patient_id",nullable = false)
     private Patient patient;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "slot_id", nullable = false, unique = true)
+    private Slot slot;
 }
