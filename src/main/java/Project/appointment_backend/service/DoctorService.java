@@ -6,6 +6,8 @@ import Project.appointment_backend.dto.DoctorDto;
 import Project.appointment_backend.entities.Doctor;
 import Project.appointment_backend.entities.Slot;
 import Project.appointment_backend.entities.SlotStatus;
+import Project.appointment_backend.exception.CustomApiException;
+import Project.appointment_backend.exception.ErrorCode;
 import Project.appointment_backend.repository.DoctorRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -60,7 +62,8 @@ public class DoctorService {
 
 
     public DoctorDto getDoctorById(int id) {
-        Doctor doctor = doctorRepository.findById(id).orElseThrow();
+        Doctor doctor = doctorRepository.findById(id).orElseThrow(
+                ()->new CustomApiException(ErrorCode.RESOURCE_NOT_FOUND, "Doctor not found with ID: " + id));
         return toDoctorDto(doctor);
     }
 
@@ -72,7 +75,9 @@ public class DoctorService {
 
     @Transactional
     public DoctorDto patchDoctor(int id, CreateDoctorDto patchDoctorDto) {
-        Doctor doctor = doctorRepository.findById(id).orElseThrow();
+        Doctor doctor = doctorRepository.findById(id).orElseThrow(
+                ()->new CustomApiException(ErrorCode.RESOURCE_NOT_FOUND, "Doctor not found with ID: " + id)
+        );
         if (patchDoctorDto.getSlots() != null) {
             List<Slot> slots = new ArrayList<>();
             for (CreateSlotDto slotDto : patchDoctorDto.getSlots()) {
@@ -91,7 +96,9 @@ public class DoctorService {
 
     @Transactional
     public DoctorDto updateDoctor(int id, CreateDoctorDto updateDoctorDto) {
-        Doctor doctor = doctorRepository.findById(id).orElseThrow();
+        Doctor doctor = doctorRepository.findById(id).orElseThrow(
+                ()->new CustomApiException(ErrorCode.RESOURCE_NOT_FOUND, "Doctor not found with ID: " + id)
+        );
         doctor.setName(updateDoctorDto.getName());
         doctor.setMail(updateDoctorDto.getMail());
         doctor.setPhone(updateDoctorDto.getPhone());

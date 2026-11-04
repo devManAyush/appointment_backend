@@ -4,7 +4,6 @@ import Project.appointment_backend.dto.AppointmentDto;
 import Project.appointment_backend.dto.CreateAppointmentDto;
 import Project.appointment_backend.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/appointment")
 @RequiredArgsConstructor
 public class AppointmentController {
-    @Autowired
     private final AppointmentService appointmentService;
 
     @PostMapping

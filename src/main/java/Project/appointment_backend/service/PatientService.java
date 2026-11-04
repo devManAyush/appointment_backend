@@ -3,6 +3,8 @@ package Project.appointment_backend.service;
 import Project.appointment_backend.dto.CreatePatientDto;
 import Project.appointment_backend.dto.PatientDto;
 import Project.appointment_backend.entities.Patient;
+import Project.appointment_backend.exception.CustomApiException;
+import Project.appointment_backend.exception.ErrorCode;
 import Project.appointment_backend.repository.PatientRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -27,7 +29,9 @@ public class PatientService {
     }
 
     public PatientDto getPatientById(int id) {
-        Patient patient = patientRepository.findById(id).orElseThrow();
+        Patient patient = patientRepository.findById(id).orElseThrow(
+                () -> new CustomApiException(ErrorCode.RESOURCE_NOT_FOUND, "Patient not found with ID: " + id)
+        );
         return  toPatientDto(patient);
     }
 
@@ -37,7 +41,9 @@ public class PatientService {
 
     @Transactional
     public PatientDto patchPatient(int id, CreatePatientDto patchPatientDto) {
-        Patient patient = patientRepository.findById(id).orElseThrow();
+        Patient patient = patientRepository.findById(id).orElseThrow(
+                () -> new CustomApiException(ErrorCode.RESOURCE_NOT_FOUND, "Patient not found with ID: " + id)
+        );
         if(patchPatientDto.getName()!=null){
             patient.setName(patchPatientDto.getName());
         }
@@ -61,7 +67,9 @@ public class PatientService {
 
     @Transactional
     public PatientDto updatePatient(int id, CreatePatientDto updatePatientDto) {
-        Patient patient = patientRepository.findById(id).orElseThrow();
+        Patient patient = patientRepository.findById(id).orElseThrow(
+                () -> new CustomApiException(ErrorCode.RESOURCE_NOT_FOUND, "Patient not found with ID: " + id)
+        );
         patient .setName(updatePatientDto.getName());
         patient.setMail(updatePatientDto.getMail());
         patient.setPhone(updatePatientDto.getPhone());
