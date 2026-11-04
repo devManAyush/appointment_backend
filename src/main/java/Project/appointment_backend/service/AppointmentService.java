@@ -10,9 +10,11 @@ import Project.appointment_backend.repository.AppointmentRepository;
 import Project.appointment_backend.repository.DoctorRepository;
 import Project.appointment_backend.repository.PatientRepository;
 import Project.appointment_backend.repository.SlotRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RequiredArgsConstructor

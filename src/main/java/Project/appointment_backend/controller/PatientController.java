@@ -4,6 +4,7 @@ import Project.appointment_backend.dto.CreatePatientDto;
 import Project.appointment_backend.dto.PatientDto;
 
 import Project.appointment_backend.service.PatientService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class PatientController {
     private final PatientService patientService;
 
     @PostMapping
-    public ResponseEntity<PatientDto> addPatient(@RequestBody CreatePatientDto createPatientDto){
+    public ResponseEntity<PatientDto> addPatient(@Valid @RequestBody CreatePatientDto createPatientDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(patientService.addPatient(createPatientDto));
     }
 
@@ -37,11 +38,11 @@ public class PatientController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
     @PatchMapping("/{id}")
-    public ResponseEntity<PatientDto> patchPatient(@PathVariable int id, @RequestBody CreatePatientDto patchPatientDto) {
+    public ResponseEntity<PatientDto> patchPatient(@PathVariable int id, @Valid @RequestBody CreatePatientDto patchPatientDto) {
         return ResponseEntity.status(HttpStatus.OK).body(patientService.patchPatient(id,patchPatientDto));
     }
     @PutMapping("/{id}")
-    public ResponseEntity<PatientDto> updatePatient(@PathVariable int id, @RequestBody CreatePatientDto updatePatientDto) {
+    public ResponseEntity<PatientDto> updatePatient(@PathVariable int id, @Valid @RequestBody CreatePatientDto updatePatientDto) {
         return ResponseEntity.status(HttpStatus.OK).body(patientService.updatePatient(id,updatePatientDto));
     }
 }
