@@ -15,6 +15,8 @@ public class CreatePatientDto {
     @Email(message = "Please provide a valid email address")
     @NotBlank(message = "Email is required")
     private String mail;
+    @NotBlank(message = "Password is required")
+    private String password;
     @NotBlank(message = "Phone number is required")
     private String phone;
     @Min(value = 0, message = "Age must be a positive number")
