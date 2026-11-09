@@ -208,11 +208,3 @@ Through this project, I have worked on:
 
 **Ayushman Singh**
 
-B.Tech – Computer Science and Engineering
-
-- GitHub: [Your GitHub Profile]
-- LinkedIn: [Your LinkedIn Profile]
-
----
-
-*This project is developed as a hands-on learning project to strengthen backend development skills using Java and the Spring ecosystem.*
