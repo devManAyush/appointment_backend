@@ -8,22 +8,39 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity){
+    SecurityFilterChain securityFilterChain(
+            HttpSecurity httpSecurity,
+            JwtAuthenticationFilter jwtAuthenticationFilter
+    ) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(s->s.sessionCreationPolicy(
-                        SessionCreationPolicy.STATELESS)).authorizeHttpRequests(auth->auth
-                        .requestMatchers ("/api/v1/signup/**",
-                                "/api/v1/login/**",
+                .sessionManagement(session -> session.sessionCreationPolicy(
+                        SessionCreationPolicy.STATELESS
+                ))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/api/v1/auth/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html").permitAll()
-                        .requestMatchers("/api/v1/doctors/**".hasAnyRole("DOCTOR", "ADMIN")
-                        .anyRequest().authenticated());
-                return httpSecurity.build();
+                                "/swagger-ui.html"
+                        ).permitAll()
+                        .requestMatchers("/api/v1/patient", "/api/v1/patient/**")
+                        .hasRole("ADMIN")
+                        .requestMatchers("/api/v1/appointment", "/api/v1/appointment/**")
+                        .hasRole("PATIENT")
+                        .requestMatchers("/api/v1/doctor/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
+                );
+
+        httpSecurity.addFilterBefore(
+                jwtAuthenticationFilter,
+                UsernamePasswordAuthenticationFilter.class
+        );
+                    return httpSecurity.build();
     }
     @Bean
     PasswordEncoder passwordEncoder() {

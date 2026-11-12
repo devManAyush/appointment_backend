@@ -17,9 +17,7 @@ public class CreateDoctorDto {
     @Email(message = "Please provide a valid email address")
     @NotBlank(message = "Email is required")
     private String mail;
-    @NotBlank(message = "Password is required")
     private String initialPassword;
-    private String password;
     @NotBlank(message = "Phone number is required")
     private String phone;
     @NotBlank(message = "Specialty is required")

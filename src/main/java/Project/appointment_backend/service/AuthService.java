@@ -8,10 +8,17 @@ import Project.appointment_backend.exception.CustomApiException;
 import Project.appointment_backend.exception.ErrorCode;
 import Project.appointment_backend.repository.AccountRepository;
 import Project.appointment_backend.repository.PatientRepository;
+import Project.appointment_backend.security.JwtService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import Project.appointment_backend.dto.LoginRequestDto;
+import Project.appointment_backend.dto.LoginResponseDto;
+import Project.appointment_backend.entities.Account;
+import Project.appointment_backend.exception.CustomApiException;
+import Project.appointment_backend.exception.ErrorCode;
+import Project.appointment_backend.security.JwtService;
 
 @Service
 @AllArgsConstructor
@@ -19,6 +26,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AccountRepository accountRepository;
     private final PatientRepository patientRepository;
+    private final JwtService jwtService;
 
     @Transactional
     public void signUpUser(CreatePatientDto createPatientDto) {
@@ -46,6 +54,24 @@ public class AuthService {
         patient.setAccount(account);
 
         patientRepository.save(patient);
+    }
+
+    public LoginResponseDto login(LoginRequestDto request) {
+        Account account = accountRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new CustomApiException(
+                        ErrorCode.INVALID_CREDENTIALS,
+                        "Invalid email or password."
+                ));
+
+        if (!passwordEncoder.matches(request.getPassword(), account.getPassword())) {
+            throw new CustomApiException(
+                    ErrorCode.INVALID_CREDENTIALS,
+                    "Invalid email or password."
+            );
+        }
+
+        String token = jwtService.createToken(account.getEmail(), account.getRole());
+        return new LoginResponseDto(token, "Bearer");
     }
 
 }

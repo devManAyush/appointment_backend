@@ -3,8 +3,8 @@ spring:
     name: appointment_backend
   datasource:
     url: jdbc:mysql://localhost:3307/appointment_db
-    username: appointment_user
-    password: appointment_dev_password
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -14,3 +14,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+app:
+  admin:
+    email: ${ADMIN_EMAIL}
+    password: ${ADMIN_PASSWORD}

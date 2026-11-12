@@ -21,17 +21,13 @@ public class Patient {
     private int id;
     private String name;
     private String mail;
-    private String password;
     private String phone;
     private int age;
     private String gender;
     private String disease;
-    @Enumerated(EnumType.STRING)
-    private Role role = Role.ROLE_PATIENT;
     @OneToMany(mappedBy = "patient")
     private List<Appointment> appointments;
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id", unique = true)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "account_id", nullable = false, unique = true)
     private Account account;
-
 }

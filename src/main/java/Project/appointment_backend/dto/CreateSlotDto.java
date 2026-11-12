@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class CreateSlotDto {
+    private Integer id;
     @NotBlank(message = "Please enter Timing")
     private LocalDateTime startTime;
     @NotBlank(message = "Please enter Timing")

@@ -27,14 +27,16 @@ public class AppointmentService {
     private final SlotRepository slotRepository;
 
     @Transactional
-    public AppointmentDto bookAppointment(CreateAppointmentDto createAppointmentDto) {
+    public AppointmentDto bookAppointment(CreateAppointmentDto createAppointmentDto, String patientEmail){
         Doctor doctor = doctorRepository.findById(createAppointmentDto.getDoctorId())
                 .orElseThrow(() -> new CustomApiException(ErrorCode.RESOURCE_NOT_FOUND, "Doctor not found with ID: " + createAppointmentDto.getDoctorId()));
 
-        Patient patient = patientRepository.findById(createAppointmentDto.getPatientId())
-                .orElseThrow(() -> new CustomApiException(ErrorCode.RESOURCE_NOT_FOUND, "Patient not found with ID: " + createAppointmentDto.getPatientId()));
-
-        Slot slot = slotRepository.findById(createAppointmentDto.getSlotId())
+        Patient patient =patientRepository.findByAccount_Email(patientEmail)
+                .orElseThrow(() -> new CustomApiException(
+                        ErrorCode.RESOURCE_NOT_FOUND,
+                        "Patient profile not found for authenticated account."
+                ));
+        Slot slot = slotRepository.findByIdForUpdate(createAppointmentDto.getSlotId())
                 .orElseThrow(() -> new CustomApiException(ErrorCode.RESOURCE_NOT_FOUND, "Slot not found with ID: " + createAppointmentDto.getSlotId()));
 
         if (slot.getStatus() == SlotStatus.BOOKED) {
@@ -58,6 +60,8 @@ public class AppointmentService {
         CreateSlotDto slotDto = new CreateSlotDto();
         slotDto.setStartTime(appointment.getSlot().getStartTime());
         slotDto.setEndTime(appointment.getSlot().getEndTime());
+        slotDto.setId(appointment.getSlot().getId());
+        slotDto.setStatus(appointment.getSlot().getStatus());
 
         return new AppointmentDto(
                 appointment.getId(),

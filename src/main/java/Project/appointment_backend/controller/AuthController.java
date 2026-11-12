@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import Project.appointment_backend.dto.LoginRequestDto;
+import Project.appointment_backend.dto.LoginResponseDto;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -24,9 +26,11 @@ public class AuthController {
         authService.signUpUser(createPatientDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-    @PostMapping("/signup")
-    public ResponseEntity<Void> signUp(@Valid @RequestBody CreateDoctorDto createDoctorDto) {
-        authService.signUpUser(createDoctorDto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> login(
+            @Valid @RequestBody LoginRequestDto request
+    ) {
+        return ResponseEntity.ok(authService.login(request));
     }
 }

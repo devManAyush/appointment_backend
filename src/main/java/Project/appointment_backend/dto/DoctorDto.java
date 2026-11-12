@@ -1,7 +1,6 @@
 package Project.appointment_backend.dto;
 
-import Project.appointment_backend.entities.Role;
-import Project.appointment_backend.dto.CreateSlotDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +20,5 @@ public class DoctorDto {
     private int visitingFees;
     private int salary;
     private List<CreateSlotDto> slots;
-    private Role role;
 
 }

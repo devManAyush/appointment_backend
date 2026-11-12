@@ -150,6 +150,7 @@ public class DoctorService {
         if (doctor.getSlots() != null) {
             for (Slot slot : doctor.getSlots()) {
                 CreateSlotDto slotDto = new CreateSlotDto();
+                slotDto.setId(slot.getId());
                 slotDto.setStartTime(slot.getStartTime());
                 slotDto.setEndTime(slot.getEndTime());
                 slotDto.setStatus(slot.getStatus());
