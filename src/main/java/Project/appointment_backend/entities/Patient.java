@@ -26,7 +26,12 @@ public class Patient {
     private int age;
     private String gender;
     private String disease;
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.ROLE_PATIENT;
     @OneToMany(mappedBy = "patient")
     private List<Appointment> appointments;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", unique = true)
+    private Account account;
 
 }

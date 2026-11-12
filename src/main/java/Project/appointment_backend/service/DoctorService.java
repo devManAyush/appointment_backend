@@ -3,16 +3,16 @@ package Project.appointment_backend.service;
 import Project.appointment_backend.dto.CreateDoctorDto;
 import Project.appointment_backend.dto.CreateSlotDto;
 import Project.appointment_backend.dto.DoctorDto;
-import Project.appointment_backend.entities.Doctor;
-import Project.appointment_backend.entities.Slot;
-import Project.appointment_backend.entities.SlotStatus;
+import Project.appointment_backend.entities.*;
 import Project.appointment_backend.exception.CustomApiException;
 import Project.appointment_backend.exception.ErrorCode;
+import Project.appointment_backend.repository.AccountRepository;
 import Project.appointment_backend.repository.DoctorRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,10 +24,33 @@ import java.util.List;
 @AllArgsConstructor
 public class DoctorService {
     private final DoctorRepository doctorRepository;
+    private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public DoctorDto addDoctor(CreateDoctorDto createDoctorDto) {
+        if (createDoctorDto.getInitialPassword() == null
+                || createDoctorDto.getInitialPassword().isBlank()) {
+            throw new CustomApiException(
+                    ErrorCode.INVALID_INPUT,
+                    "An initial password is required when creating a doctor."
+            );
+        }
+        if (accountRepository.existsByEmail(createDoctorDto.getMail())) {
+            throw new CustomApiException(
+                    ErrorCode.INVALID_INPUT,
+                    "An account with this email already exists."
+            );
+        }
+        Account account = new Account();
+        account.setName(createDoctorDto.getName());
+        account.setEmail(createDoctorDto.getMail());
+        account.setPassword(passwordEncoder.encode(createDoctorDto.getInitialPassword()));
+        account.setRole(Role.DOCTOR);
+        accountRepository.save(account);
+
         Doctor doctor = new Doctor();
+        doctor.setAccount(account);
         doctor.setName(createDoctorDto.getName());
         doctor.setMail(createDoctorDto.getMail());
         doctor.setPhone(createDoctorDto.getPhone());

@@ -19,14 +19,18 @@ public class Doctor {
     private int id;
     private String name;
     private String mail;
+    private String password;
     private String phone;
     private String specialty;
     private int visitingFees;
     private int salary;
-
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", unique = true)
+    private Account account;
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.DOCTOR;
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     private List<Appointment> appointments;
-
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     private List<Slot> slots=new ArrayList<>();
 }

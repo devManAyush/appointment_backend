@@ -1,5 +1,6 @@
 package Project.appointment_backend.controller;
 
+import Project.appointment_backend.dto.CreateDoctorDto;
 import Project.appointment_backend.dto.CreatePatientDto;
 import Project.appointment_backend.service.AuthService;
 import jakarta.validation.Valid;
@@ -21,6 +22,11 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<Void> signUp(@Valid @RequestBody CreatePatientDto createPatientDto) {
         authService.signUpUser(createPatientDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+    @PostMapping("/signup")
+    public ResponseEntity<Void> signUp(@Valid @RequestBody CreateDoctorDto createDoctorDto) {
+        authService.signUpUser(createDoctorDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

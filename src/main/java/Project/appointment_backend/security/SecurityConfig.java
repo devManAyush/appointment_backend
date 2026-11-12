@@ -16,10 +16,12 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s->s.sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS)).authorizeHttpRequests(auth->auth
-                        .requestMatchers ("/api/v1/auth/**",
+                        .requestMatchers ("/api/v1/signup/**",
+                                "/api/v1/login/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html").permitAll()
+                        .requestMatchers("/api/v1/doctors/**".hasAnyRole("DOCTOR", "ADMIN")
                         .anyRequest().authenticated());
                 return httpSecurity.build();
     }

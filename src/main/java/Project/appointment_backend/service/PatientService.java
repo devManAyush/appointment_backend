@@ -79,18 +79,6 @@ public class PatientService {
         return toPatientDto(patient);
     }
 
-    public PatientDto addPatient(CreatePatientDto createPatientDto) {
-        Patient patient = new Patient();
-        patient.setName(createPatientDto.getName());
-        patient.setMail(createPatientDto.getMail());
-        patient.setPhone(createPatientDto.getPhone());
-        patient.setAge(createPatientDto.getAge());
-        patient.setGender(createPatientDto.getGender());
-        patient.setDisease(createPatientDto.getDisease());
-        Patient savedPatient = patientRepository.save(patient);
-        return toPatientDto(savedPatient);
-    }
-
     private PatientDto toPatientDto(Patient patient) {
         return new PatientDto(
                 patient.getId(),
